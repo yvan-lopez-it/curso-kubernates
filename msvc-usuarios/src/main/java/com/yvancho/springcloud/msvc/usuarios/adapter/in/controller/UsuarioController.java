@@ -1,7 +1,8 @@
-package com.yvancho.springcloud.msvc.usuarios.controllers;
+package com.yvancho.springcloud.msvc.usuarios.adapter.in.controller;
 
-import com.yvancho.springcloud.msvc.usuarios.models.entity.Usuario;
-import com.yvancho.springcloud.msvc.usuarios.service.UsuarioService;
+import com.yvancho.springcloud.msvc.usuarios.adapter.in.dto.UsuarioDTO;
+
+import com.yvancho.springcloud.msvc.usuarios.application.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,18 +25,19 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
+
     public UsuarioController(UsuarioService usuarioService) {
         this.service = usuarioService;
     }
 
     @GetMapping
-    public List<Usuario> listar() {
-        return service.listar();
+    public ResponseEntity<List<UsuarioDTO>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detalle(@Valid @PathVariable Long id) {
-        Optional<Usuario> o = service.getUsuarioById(id);
+        Optional<UsuarioDTO> o = service.getUsuarioById(id);
 
         if (o.isPresent()) {
             return ResponseEntity.ok(o.get());
@@ -45,48 +47,49 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Usuario usuario, BindingResult result) {
+    public ResponseEntity<?> crear(@Valid @RequestBody UsuarioDTO usuarioDTO, BindingResult result) {
 
         if (result.hasErrors()) {
             return validar(result);
         }
 
-        if (!usuario.getEmail().isEmpty()
-            && service.existsByEmail(usuario.getEmail())) {
+        if (!usuarioDTO.getEmail().isEmpty()
+            && service.existsByEmail(usuarioDTO.getEmail())) {
             return ResponseEntity.badRequest()
                 .body(Collections
                     .singletonMap("message", "Ya existe un usuario con ese email."));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(service.guardar(usuario));
+            .body(service.guardar(usuarioDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@RequestBody Usuario usuario, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<?> actualizar(@RequestBody UsuarioDTO usuarioRequest, BindingResult result, @PathVariable Long id) {
 
         if (result.hasErrors()) {
             return validar(result);
         }
 
-        Optional<Usuario> o = service.getUsuarioById(id);
-        if (o.isPresent()) {
-            Usuario usuarioDb = o.get();
+        Optional<UsuarioDTO> o = service.getUsuarioById(id);
 
-            if (!usuario.getEmail().isEmpty()
-                && !usuario.getEmail().equalsIgnoreCase(usuarioDb.getEmail())
-                && service.findByEmail(usuario.getEmail()).isPresent()) {
+        if (o.isPresent()) {
+            UsuarioDTO usuarioDTO = o.get();
+
+            if (!usuarioRequest.getEmail().isEmpty()
+                && !usuarioRequest.getEmail().equalsIgnoreCase(usuarioDTO.getEmail())
+                && service.findByEmail(usuarioRequest.getEmail()).isPresent()) {
 
                 return ResponseEntity.badRequest()
                     .body(Collections.singletonMap("message", "Ya existe un usuario con ese email."));
             }
 
-            usuarioDb.setNombre(usuario.getNombre());
-            usuarioDb.setEmail(usuario.getEmail());
-            usuarioDb.setPassword(usuario.getPassword());
+            usuarioDTO.setNombre(usuarioRequest.getNombre());
+            usuarioDTO.setEmail(usuarioRequest.getEmail());
+            usuarioDTO.setPassword(usuarioRequest.getPassword());
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.guardar(usuarioDb));
+                .body(service.guardar(usuarioDTO));
         }
 
         return ResponseEntity.notFound().build();
@@ -94,7 +97,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@Valid @PathVariable Long id) {
-        Optional<Usuario> usuario = service.getUsuarioById(id);
+        Optional<UsuarioDTO> usuario = service.getUsuarioById(id);
         if (usuario.isPresent()) {
             service.eliminar(id);
             return ResponseEntity.noContent().build();
@@ -105,10 +108,13 @@ public class UsuarioController {
 
     private ResponseEntity<Map<String, String>> validar(BindingResult result) {
         Map<String, String> errores = new HashMap<>();
-        result.getFieldErrors().forEach(err -> errores.put(
-            err.getField(),
-            "El campo " + err.getField() + " " + err.getDefaultMessage()
-        ));
+
+        result.getFieldErrors()
+            .forEach(err -> errores.put(
+                err.getField(),
+                "El campo " + err.getField() + " " + err.getDefaultMessage()
+            ));
+
         return ResponseEntity.badRequest().body(errores);
     }
 }

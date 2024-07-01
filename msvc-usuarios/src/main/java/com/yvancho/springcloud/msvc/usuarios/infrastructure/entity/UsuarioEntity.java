@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.usuarios.models.entity;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
