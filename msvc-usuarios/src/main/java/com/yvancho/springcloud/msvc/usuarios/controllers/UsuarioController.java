@@ -3,6 +3,7 @@ package com.yvancho.springcloud.msvc.usuarios.controllers;
 import com.yvancho.springcloud.msvc.usuarios.models.entity.Usuario;
 import com.yvancho.springcloud.msvc.usuarios.service.UsuarioService;
 import jakarta.validation.Valid;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,12 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody Usuario usuario, BindingResult result) {
+
+        if (service.findByEmail(usuario.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest()
+                .body(Collections.singletonMap("message", "Ya existe un usuario con ese email."));
+        }
+
         if (result.hasErrors()) {
             return validar(result);
         }
@@ -62,6 +69,13 @@ public class UsuarioController {
         Optional<Usuario> o = service.getUsuarioById(id);
         if (o.isPresent()) {
             Usuario usuarioDb = o.get();
+
+            if (!usuario.getEmail().equalsIgnoreCase(usuarioDb.getEmail())
+                && service.findByEmail(usuario.getEmail()).isPresent()) {
+                return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("message", "Ya existe un usuario con ese email."));
+            }
+
             usuarioDb.setNombre(usuario.getNombre());
             usuarioDb.setEmail(usuario.getEmail());
             usuarioDb.setPassword(usuario.getPassword());

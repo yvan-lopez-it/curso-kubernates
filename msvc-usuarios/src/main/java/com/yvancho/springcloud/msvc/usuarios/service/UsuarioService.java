@@ -14,4 +14,6 @@ public interface UsuarioService {
 
     void eliminar(Long id);
 
+    Optional<Usuario> findByEmail(String email);
+
 }
