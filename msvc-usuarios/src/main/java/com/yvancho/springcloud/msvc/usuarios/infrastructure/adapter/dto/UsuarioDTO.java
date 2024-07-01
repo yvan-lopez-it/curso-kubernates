@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.usuarios.adapter.in.dto;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto;
 
 import lombok.Data;
 

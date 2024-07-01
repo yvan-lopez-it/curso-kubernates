@@ -1,6 +1,6 @@
-package com.yvancho.springcloud.msvc.usuarios.adapter.in.mapper;
+package com.yvancho.springcloud.msvc.usuarios.application.mapper;
 
-import com.yvancho.springcloud.msvc.usuarios.adapter.in.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto.UsuarioDTO;
 import com.yvancho.springcloud.msvc.usuarios.domain.model.Usuario;
 import org.mapstruct.Mapper;
 

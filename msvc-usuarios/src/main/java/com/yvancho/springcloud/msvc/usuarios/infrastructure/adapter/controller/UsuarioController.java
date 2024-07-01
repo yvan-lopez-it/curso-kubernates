@@ -1,8 +1,8 @@
-package com.yvancho.springcloud.msvc.usuarios.adapter.in.controller;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.controller;
 
-import com.yvancho.springcloud.msvc.usuarios.adapter.in.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto.UsuarioDTO;
 
-import com.yvancho.springcloud.msvc.usuarios.application.service.UsuarioService;
+import com.yvancho.springcloud.msvc.usuarios.application.port.in.UsuarioUseCase;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,21 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsuarioController {
 
-    private final UsuarioService service;
+    private final UsuarioUseCase useCase;
 
-
-    public UsuarioController(UsuarioService usuarioService) {
-        this.service = usuarioService;
+    public UsuarioController(UsuarioUseCase useCase) {
+        this.useCase = useCase;
     }
 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listar() {
-        return ResponseEntity.ok(service.listar());
+        return ResponseEntity.ok(useCase.listar());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detalle(@Valid @PathVariable Long id) {
-        Optional<UsuarioDTO> o = service.getUsuarioById(id);
+        Optional<UsuarioDTO> o = useCase.getUsuarioById(id);
 
         if (o.isPresent()) {
             return ResponseEntity.ok(o.get());
@@ -54,14 +53,14 @@ public class UsuarioController {
         }
 
         if (!usuarioDTO.getEmail().isEmpty()
-            && service.existsByEmail(usuarioDTO.getEmail())) {
+            && useCase.existsByEmail(usuarioDTO.getEmail())) {
             return ResponseEntity.badRequest()
                 .body(Collections
                     .singletonMap("message", "Ya existe un usuario con ese email."));
         }
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(service.guardar(usuarioDTO));
+            .body(useCase.guardar(usuarioDTO));
     }
 
     @PutMapping("/{id}")
@@ -71,14 +70,14 @@ public class UsuarioController {
             return validar(result);
         }
 
-        Optional<UsuarioDTO> o = service.getUsuarioById(id);
+        Optional<UsuarioDTO> o = useCase.getUsuarioById(id);
 
         if (o.isPresent()) {
             UsuarioDTO usuarioDTO = o.get();
 
             if (!usuarioRequest.getEmail().isEmpty()
                 && !usuarioRequest.getEmail().equalsIgnoreCase(usuarioDTO.getEmail())
-                && service.findByEmail(usuarioRequest.getEmail()).isPresent()) {
+                && useCase.findByEmail(usuarioRequest.getEmail()).isPresent()) {
 
                 return ResponseEntity.badRequest()
                     .body(Collections.singletonMap("message", "Ya existe un usuario con ese email."));
@@ -89,7 +88,7 @@ public class UsuarioController {
             usuarioDTO.setPassword(usuarioRequest.getPassword());
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.guardar(usuarioDTO));
+                .body(useCase.guardar(usuarioDTO));
         }
 
         return ResponseEntity.notFound().build();
@@ -97,9 +96,9 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@Valid @PathVariable Long id) {
-        Optional<UsuarioDTO> usuario = service.getUsuarioById(id);
+        Optional<UsuarioDTO> usuario = useCase.getUsuarioById(id);
         if (usuario.isPresent()) {
-            service.eliminar(id);
+            useCase.eliminar(id);
             return ResponseEntity.noContent().build();
         }
 

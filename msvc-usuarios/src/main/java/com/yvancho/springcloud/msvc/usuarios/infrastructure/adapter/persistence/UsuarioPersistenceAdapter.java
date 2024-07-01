@@ -1,5 +1,6 @@
-package com.yvancho.springcloud.msvc.usuarios.adapter.out;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.persistence;
 
+import com.yvancho.springcloud.msvc.usuarios.application.port.out.UsuarioPort;
 import com.yvancho.springcloud.msvc.usuarios.domain.model.Usuario;
 import com.yvancho.springcloud.msvc.usuarios.infrastructure.entity.UsuarioEntity;
 import com.yvancho.springcloud.msvc.usuarios.infrastructure.mapper.UsuarioMapper;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UsuarioPersistenceAdapter {
+public class UsuarioPersistenceAdapter implements UsuarioPort {
 
     private final UsuarioRepository repository;
     private final UsuarioMapper mapper;
