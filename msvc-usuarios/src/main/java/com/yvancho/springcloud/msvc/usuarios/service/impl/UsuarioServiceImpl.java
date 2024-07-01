@@ -11,39 +11,45 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository repository;
 
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        this.repository = usuarioRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Usuario> listar() {
-        return (List<Usuario>) usuarioRepository.findAll();
+        return (List<Usuario>) repository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Usuario> getUsuarioById(Long id) {
-        return usuarioRepository.findById(id);
+        return repository.findById(id);
     }
 
     @Override
     @Transactional
     public Usuario guardar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        return repository.save(usuario);
     }
 
     @Override
     @Transactional
     public void eliminar(Long id) {
-        usuarioRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Usuario> findByEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+    // return usuarioRepository.buscarPorEmail(String email);
+        return repository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 }
