@@ -1,7 +1,8 @@
-package com.yvancho.springcloud.msvc.cursos.controllers;
+package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.controller;
 
-import com.yvancho.springcloud.msvc.cursos.entity.Curso;
-import com.yvancho.springcloud.msvc.cursos.services.CursoService;
+import com.yvancho.springcloud.msvc.cursos.application.port.in.CursoUseCase;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoDTO;
+
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -21,20 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CursoController {
 
-    private final CursoService service;
+    private final CursoUseCase useCase;
 
-    public CursoController(CursoService service) {
-        this.service = service;
+    public CursoController(CursoUseCase useCase) {
+        this.useCase = useCase;
     }
 
     @GetMapping
-    public ResponseEntity<List<Curso>> listar() {
-        return ResponseEntity.ok(service.listar());
+    public ResponseEntity<List<CursoDTO>> listar() {
+        return ResponseEntity.ok(useCase.listar());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detalle(@Valid @PathVariable Long id) {
-        Optional<Curso> o = service.getById(id);
+        Optional<CursoDTO> o = useCase.getById(id);
 
         if (o.isPresent()) {
             return ResponseEntity.ok(o.get());
@@ -44,28 +45,28 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result) {
+    public ResponseEntity<?> crear(@Valid @RequestBody CursoDTO cursoDTO, BindingResult result) {
         if (result.hasErrors()) {
             return this.validar(result);
         }
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(service.guardar(curso));
+            .body(useCase.guardar(cursoDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@Valid @RequestBody Curso curso, BindingResult result, @PathVariable Long id) {
+    public ResponseEntity<?> actualizar(@Valid @RequestBody CursoDTO cursoDTO, BindingResult result, @PathVariable Long id) {
 
         if (result.hasErrors()) {
             return validar(result);
         }
 
-        Optional<Curso> o = service.getById(id);
+        Optional<CursoDTO> o = useCase.getById(id);
         if (o.isPresent()) {
-            Curso cursoDb = o.get();
-            cursoDb.setNombre(curso.getNombre());
+            CursoDTO cursoDb = o.get();
+            cursoDb.setNombre(cursoDTO.getNombre());
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.guardar(cursoDb));
+                .body(useCase.guardar(cursoDb));
         }
 
         return ResponseEntity.notFound().build();
@@ -73,9 +74,9 @@ public class CursoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(@Valid @PathVariable Long id) {
-        Optional<Curso> usuario = service.getById(id);
-        if (usuario.isPresent()) {
-            service.eliminar(id);
+        Optional<CursoDTO> o = useCase.getById(id);
+        if (o.isPresent()) {
+            useCase.eliminar(id);
             return ResponseEntity.noContent().build();
         }
 

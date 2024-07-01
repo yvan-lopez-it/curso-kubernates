@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mysql-db:
     image: mysql:latest
-    restart: always
     environment:
       MYSQL_DATABASE: msvc_usuarios
       MYSQL_USER: mysql

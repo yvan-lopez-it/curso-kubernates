@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.cursos.entity;
+package com.yvancho.springcloud.msvc.cursos.infrastructure.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "cursos")
-public class Curso {
+public class CursoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

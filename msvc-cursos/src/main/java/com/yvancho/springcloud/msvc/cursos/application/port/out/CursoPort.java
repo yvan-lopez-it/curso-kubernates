@@ -1,10 +1,10 @@
-package com.yvancho.springcloud.msvc.cursos.services;
+package com.yvancho.springcloud.msvc.cursos.application.port.out;
 
-import com.yvancho.springcloud.msvc.cursos.entity.Curso;
+import com.yvancho.springcloud.msvc.cursos.domain.model.Curso;
 import java.util.List;
 import java.util.Optional;
 
-public interface CursoService {
+public interface CursoPort {
 
     List<Curso> listar();
 
