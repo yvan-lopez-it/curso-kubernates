@@ -2,10 +2,14 @@ package com.yvancho.springcloud.msvc.cursos.controllers;
 
 import com.yvancho.springcloud.msvc.cursos.entity.Curso;
 import com.yvancho.springcloud.msvc.cursos.services.CursoService;
+import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +33,7 @@ public class CursoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> detalle(@PathVariable Long id) {
+    public ResponseEntity<?> detalle(@Valid @PathVariable Long id) {
         Optional<Curso> o = service.getById(id);
 
         if (o.isPresent()) {
@@ -40,13 +44,21 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<Curso> crear(@RequestBody Curso curso) {
+    public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result) {
+        if (result.hasErrors()) {
+            return this.validar(result);
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(service.guardar(curso));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@RequestBody Curso curso, @PathVariable Long id) {
+    public ResponseEntity<?> actualizar(@Valid @RequestBody Curso curso, BindingResult result, @PathVariable Long id) {
+
+        if (result.hasErrors()) {
+            return validar(result);
+        }
+
         Optional<Curso> o = service.getById(id);
         if (o.isPresent()) {
             Curso cursoDb = o.get();
@@ -60,7 +72,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+    public ResponseEntity<?> eliminar(@Valid @PathVariable Long id) {
         Optional<Curso> usuario = service.getById(id);
         if (usuario.isPresent()) {
             service.eliminar(id);
@@ -68,5 +80,14 @@ public class CursoController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<Map<String, String>> validar(BindingResult result) {
+        Map<String, String> errores = new HashMap<>();
+        result.getFieldErrors().forEach(err -> errores.put(
+            err.getField(),
+            "El campo " + err.getField() + " " + err.getDefaultMessage()
+        ));
+        return ResponseEntity.badRequest().body(errores);
     }
 }
