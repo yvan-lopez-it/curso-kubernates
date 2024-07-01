@@ -2,18 +2,18 @@ package com.yvancho.springcloud.msvc.usuarios.service.impl;
 
 import com.yvancho.springcloud.msvc.usuarios.models.entity.Usuario;
 import com.yvancho.springcloud.msvc.usuarios.repositories.UsuarioRepository;
-import com.yvancho.springcloud.msvc.usuarios.service.IUsuario;
+import com.yvancho.springcloud.msvc.usuarios.service.UsuarioService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UsuarioService implements IUsuario {
+public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 

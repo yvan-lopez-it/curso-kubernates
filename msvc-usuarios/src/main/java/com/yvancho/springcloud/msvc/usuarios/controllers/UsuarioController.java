@@ -1,7 +1,7 @@
 package com.yvancho.springcloud.msvc.usuarios.controllers;
 
 import com.yvancho.springcloud.msvc.usuarios.models.entity.Usuario;
-import com.yvancho.springcloud.msvc.usuarios.service.IUsuario;
+import com.yvancho.springcloud.msvc.usuarios.service.UsuarioService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UsuarioController {
 
-    private final IUsuario usuarioService;
+    private final UsuarioService usuarioService;
 
-    public UsuarioController(IUsuario usuarioService) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 

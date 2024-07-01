@@ -4,7 +4,7 @@ import com.yvancho.springcloud.msvc.usuarios.models.entity.Usuario;
 import java.util.List;
 import java.util.Optional;
 
-public interface IUsuario {
+public interface UsuarioService {
 
     List<Usuario> listar();
 

@@ -16,5 +16,17 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: msvc_cursos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
 volumes:
   mysql-data:
+  postgres-data:
