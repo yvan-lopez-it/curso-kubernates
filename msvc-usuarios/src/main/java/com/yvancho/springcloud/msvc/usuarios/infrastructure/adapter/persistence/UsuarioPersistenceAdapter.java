@@ -41,6 +41,14 @@ public class UsuarioPersistenceAdapter implements UsuarioPort {
         repository.deleteById(id);
     }
 
+    @Override
+    public List<Usuario> listarPorIds(Iterable<Long> ids) {
+        List<UsuarioEntity> usuarioEntities = (List<UsuarioEntity>) repository.findAllById(ids);
+        return usuarioEntities.stream()
+            .map(mapper::toDomain)
+            .toList();
+    }
+
     public Optional<Usuario> findByEmail(String email) {
         return repository.findByEmail(email)
             .map(mapper::toDomain);

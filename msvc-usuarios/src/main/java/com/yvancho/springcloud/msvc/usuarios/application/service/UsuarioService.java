@@ -50,6 +50,14 @@ public class UsuarioService implements UsuarioUseCase {
     }
 
     @Override
+    public List<UsuarioDTO> listarPorIds(Iterable<Long> ids) {
+        List<Usuario> usuarios = usuarioPort.listarPorIds(ids);
+        return usuarios.stream()
+            .map(mapper::toDto)
+            .toList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<UsuarioDTO> findByEmail(String email) {
         Optional<Usuario> o = usuarioPort.findByEmail(email);

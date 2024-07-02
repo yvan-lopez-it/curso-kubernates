@@ -14,6 +14,8 @@ public interface UsuarioUseCase {
 
     void eliminar(Long id);
 
+    List<UsuarioDTO> listarPorIds(Iterable<Long> ids);
+
     Optional<UsuarioDTO> findByEmail(String email);
 
     boolean existsByEmail(String email);
