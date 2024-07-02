@@ -2,6 +2,7 @@ package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.persistence;
 
 import com.yvancho.springcloud.msvc.cursos.application.port.out.CursoPort;
 import com.yvancho.springcloud.msvc.cursos.domain.model.Curso;
+import com.yvancho.springcloud.msvc.cursos.domain.model.Usuario;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.entity.CursoEntity;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.mapper.CursoMapper;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.repositories.CursoRepository;
@@ -44,4 +45,5 @@ public class CursoPersistenceAdapter implements CursoPort {
     public void eliminar(Long id) {
         repository.deleteById(id);
     }
+
 }

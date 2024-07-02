@@ -4,7 +4,10 @@ import com.yvancho.springcloud.msvc.cursos.application.mapper.CursoDTOMapper;
 import com.yvancho.springcloud.msvc.cursos.application.port.in.CursoUseCase;
 import com.yvancho.springcloud.msvc.cursos.application.port.out.CursoPort;
 import com.yvancho.springcloud.msvc.cursos.domain.model.Curso;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.clients.UsuarioClientRest;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoUsuarioDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.UsuarioDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,12 @@ public class CursoService implements CursoUseCase {
 
     private final CursoPort cursoPort;
     private final CursoDTOMapper mapper;
+    private final UsuarioClientRest clientRest;
 
-    public CursoService(CursoPort cursoPort, CursoDTOMapper mapper) {
+    public CursoService(CursoPort cursoPort, CursoDTOMapper mapper, UsuarioClientRest clientRest) {
         this.cursoPort = cursoPort;
         this.mapper = mapper;
+        this.clientRest = clientRest;
     }
 
     @Override
@@ -45,7 +50,79 @@ public class CursoService implements CursoUseCase {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         cursoPort.eliminar(id);
+    }
+
+    @Override
+    @Transactional
+    public Optional<UsuarioDTO> asignarUsuario(UsuarioDTO usuarioDTO, Long cursoId) {
+
+        Optional<CursoDTO> o = cursoPort.getById(cursoId)
+            .map(mapper::toDto);
+
+        if (o.isPresent()) {
+            UsuarioDTO usuarioMsvc = clientRest.detalle(usuarioDTO.getId());
+
+            CursoDTO cursoDTO = o.get();
+            CursoUsuarioDTO cursoUsuarioDTO = new CursoUsuarioDTO();
+            cursoUsuarioDTO.setUsuarioId(usuarioMsvc.getId());
+
+            cursoDTO.addCursoUsuario(cursoUsuarioDTO);
+
+            cursoPort.guardar(mapper.toDomain(cursoDTO));
+
+            return Optional.of(usuarioMsvc);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public Optional<UsuarioDTO> crearUsuario(UsuarioDTO usuarioDTO, Long cursoId) {
+        Optional<CursoDTO> o = cursoPort.getById(cursoId)
+            .map(mapper::toDto);
+
+        if (o.isPresent()) {
+            UsuarioDTO usuarioNuevoMsvc = clientRest.crear(usuarioDTO);
+
+            CursoDTO cursoDTO = o.get();
+            CursoUsuarioDTO cursoUsuarioDTO = new CursoUsuarioDTO();
+            cursoUsuarioDTO.setUsuarioId(usuarioNuevoMsvc.getId());
+
+            cursoDTO.addCursoUsuario(cursoUsuarioDTO);
+
+            cursoPort.guardar(mapper.toDomain(cursoDTO));
+
+            return Optional.of(usuarioNuevoMsvc);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public Optional<UsuarioDTO> eliminarUsuario(UsuarioDTO usuarioDTO, Long cursoId) {
+
+        Optional<CursoDTO> o = cursoPort.getById(cursoId)
+            .map(mapper::toDto);
+
+        if (o.isPresent()) {
+            UsuarioDTO usuarioMsvc = clientRest.detalle(usuarioDTO.getId());
+
+            CursoDTO cursoDTO = o.get();
+            CursoUsuarioDTO cursoUsuarioDTO = new CursoUsuarioDTO();
+            cursoUsuarioDTO.setUsuarioId(usuarioMsvc.getId());
+
+            cursoDTO.removeCursoUsuario(cursoUsuarioDTO);
+
+            cursoPort.guardar(mapper.toDomain(cursoDTO));
+
+            return Optional.of(usuarioMsvc);
+        }
+
+        return Optional.empty();
     }
 }
