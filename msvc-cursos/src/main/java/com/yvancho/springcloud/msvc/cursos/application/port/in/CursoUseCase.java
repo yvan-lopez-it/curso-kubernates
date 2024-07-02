@@ -11,9 +11,13 @@ public interface CursoUseCase {
 
     Optional<CursoDTO> getById(Long id);
 
+    Optional<CursoDTO> porIdConUsuarios(Long id);
+
     CursoDTO guardar(CursoDTO cursoDto);
 
     void eliminar(Long id);
+
+    void eliminarCursoUsuarioPorId(Long usuarioId);
 
     Optional<UsuarioDTO> asignarUsuario(UsuarioDTO usuarioDTO, Long cursoId);
 

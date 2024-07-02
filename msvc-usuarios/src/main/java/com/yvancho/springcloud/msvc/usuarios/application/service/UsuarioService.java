@@ -1,5 +1,6 @@
 package com.yvancho.springcloud.msvc.usuarios.application.service;
 
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.client.CursoClienteRest;
 import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto.UsuarioDTO;
 import com.yvancho.springcloud.msvc.usuarios.application.mapper.UsuarioDTOMapper;
 import com.yvancho.springcloud.msvc.usuarios.application.port.in.UsuarioUseCase;
@@ -15,10 +16,12 @@ public class UsuarioService implements UsuarioUseCase {
 
     private final UsuarioPort usuarioPort;
     private final UsuarioDTOMapper mapper;
+    private final CursoClienteRest clienteRest;
 
-    public UsuarioService(UsuarioPort usuarioPort, UsuarioDTOMapper mapper) {
+    public UsuarioService(UsuarioPort usuarioPort, UsuarioDTOMapper mapper, CursoClienteRest clienteRest) {
         this.usuarioPort = usuarioPort;
         this.mapper = mapper;
+        this.clienteRest = clienteRest;
     }
 
     @Override
@@ -45,11 +48,14 @@ public class UsuarioService implements UsuarioUseCase {
     }
 
     @Override
+    @Transactional
     public void eliminar(Long id) {
         usuarioPort.eliminar(id);
+        clienteRest.eliminarCursoUsuarioPorId(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UsuarioDTO> listarPorIds(Iterable<Long> ids) {
         List<Usuario> usuarios = usuarioPort.listarPorIds(ids);
         return usuarios.stream()

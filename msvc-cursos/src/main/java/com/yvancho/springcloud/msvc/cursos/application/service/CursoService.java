@@ -3,6 +3,7 @@ package com.yvancho.springcloud.msvc.cursos.application.service;
 import com.yvancho.springcloud.msvc.cursos.application.mapper.CursoDTOMapper;
 import com.yvancho.springcloud.msvc.cursos.application.port.in.CursoUseCase;
 import com.yvancho.springcloud.msvc.cursos.application.port.out.CursoPort;
+import com.yvancho.springcloud.msvc.cursos.application.port.out.CursoUsuarioPort;
 import com.yvancho.springcloud.msvc.cursos.domain.model.Curso;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.clients.UsuarioClientRest;
 import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoDTO;
@@ -17,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CursoService implements CursoUseCase {
 
     private final CursoPort cursoPort;
+    private final CursoUsuarioPort cursoUsuarioPort;
     private final CursoDTOMapper mapper;
     private final UsuarioClientRest clientRest;
 
-    public CursoService(CursoPort cursoPort, CursoDTOMapper mapper, UsuarioClientRest clientRest) {
+    public CursoService(CursoPort cursoPort, CursoUsuarioPort cursoUsuarioPort, CursoDTOMapper mapper, UsuarioClientRest clientRest) {
         this.cursoPort = cursoPort;
+        this.cursoUsuarioPort = cursoUsuarioPort;
         this.mapper = mapper;
         this.clientRest = clientRest;
     }
@@ -43,6 +46,24 @@ public class CursoService implements CursoUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<CursoDTO> porIdConUsuarios(Long id) {
+        Optional<Curso> o = cursoPort.getById(id);
+        if (o.isPresent()) {
+            CursoDTO cursoDTO = mapper.toDto(o.get());
+            if (!cursoDTO.getCursoUsuarios().isEmpty()) {
+                List<Long> ids = cursoDTO.getCursoUsuarios().stream()
+                    .map(CursoUsuarioDTO::getUsuarioId).toList();
+
+                List<UsuarioDTO> usuarioDTOS = clientRest.obtenerAlumnosPorCurso(ids);
+                cursoDTO.setUsuarios(usuarioDTOS);
+            }
+            return Optional.of(cursoDTO);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     @Transactional
     public CursoDTO guardar(CursoDTO cursoDto) {
         Curso usuarioGuardado = cursoPort.guardar(mapper.toDomain(cursoDto));
@@ -53,6 +74,12 @@ public class CursoService implements CursoUseCase {
     @Transactional
     public void eliminar(Long id) {
         cursoPort.eliminar(id);
+    }
+
+    @Override
+    @Transactional
+    public void eliminarCursoUsuarioPorId(Long usuarioId) {
+        cursoUsuarioPort.eliminarCursoUsuarioPorId(usuarioId);
     }
 
     @Override
