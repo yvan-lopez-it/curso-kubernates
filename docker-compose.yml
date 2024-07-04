@@ -26,6 +26,30 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  msvc-usuarios:
+    build: ./msvc-usuarios
+    ports:
+      - "8001:8001"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/msvc_usuarios?serverTimezone=America/Lima&allowPublicKeyRetrieval=false
+      - SPRING_DATASOURCE_USERNAME=mysql
+      - SPRING_DATASOURCE_PASSWORD=mysql
+      - MSVC_CURSOS_URL:msvc-cursos:8002
+    depends_on:
+      - mysql-db
+
+  msvc-cursos:
+    build: ./msvc-cursos
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/msvc_cursos
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - MSVC_USUARIOS_URL:msvc-usuarios:8001
+    depends_on:
+      - postgres-db
+
 volumes:
   mysql-data:
   postgres-data:
