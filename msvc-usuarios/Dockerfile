@@ -20,15 +20,18 @@ RUN ./mvnw clean package -DskipTests
 FROM openjdk:17-alpine
 
 WORKDIR /app
-
+RUN mkdir ./logs
 COPY --from=builder /app/msvc-usuarios/target/msvc-usuarios-0.0.1-SNAPSHOT.jar .
-
 EXPOSE 8001
 
 # Establecer el perfil activo para que use application-docker.properties
 ENV SPRING_PROFILES_ACTIVE=docker
 
-ENTRYPOINT ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
+#ENTRYPOINT ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
 
-# docker build -t msvc-usuarios . -f ./msvc-usuarios/Dockerfile
+# docker build -t usuarios:latest . -f .\msvc-usuarios\Dockerfile
 # docker run -d --name msvc-usuarios --network curso-kubernates_default -p 8001:8001 msvc-usuarios:latest
+# docker run -p 8001:8001 --rm -d msvc-usuarios
+
+# docker run -p 8001:8001 -d --rm --name msvc-usuarios --network spring usuarios
