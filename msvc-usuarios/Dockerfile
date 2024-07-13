@@ -37,7 +37,7 @@ EXPOSE $PORT
 # Establecer el perfil activo para que use application-docker.properties
 ENV SPRING_PROFILES_ACTIVE=docker
 
-CMD ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
 #ENTRYPOINT ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
 
 # docker build -t usuarios . -f .\msvc-usuarios\Dockerfile
@@ -45,3 +45,6 @@ CMD ["java", "-jar", "-Xms2048m", "-Xmx2048m", "msvc-usuarios-0.0.1-SNAPSHOT.jar
 # docker run -p 8001:8000 --rm -d msvc-usuarios
 
 # docker run -p 8001:8000 -d --rm --name msvc-usuarios --network spring usuarios
+
+# docker build tag usuarios yvancho/usuarios
+# docker push yvancho/usuarios
