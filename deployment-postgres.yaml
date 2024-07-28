@@ -21,11 +21,20 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: msvc_cursos
+              valueFrom:
+                configMapKeyRef:
+                  key: db_database
+                  name: msvc-cursos
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: msvc-cursos
             - name: POSTGRES_PASSWORD
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: msvc-cursos
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data
@@ -33,6 +42,3 @@ spec:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-pvc
-#          hostPath:
-#            path: /var/lib/postgresql/data
-#            type: DirectoryOrCreate
