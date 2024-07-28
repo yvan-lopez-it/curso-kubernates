@@ -1,6 +1,6 @@
-package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.controller;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.in.web.controller;
 
-import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.out.dto.UsuarioDTO;
 
 import com.yvancho.springcloud.msvc.usuarios.application.port.in.UsuarioUseCase;
 import jakarta.validation.Valid;
@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -26,8 +28,16 @@ public class UsuarioController {
 
     private final UsuarioUseCase useCase;
 
-    public UsuarioController(UsuarioUseCase useCase) {
+    private final ApplicationContext context;
+
+    public UsuarioController(UsuarioUseCase useCase, ApplicationContext context) {
         this.useCase = useCase;
+        this.context = context;
+    }
+
+    @GetMapping("/crash")
+    public void crash() {
+        ((ConfigurableApplicationContext) context).close();
     }
 
     @GetMapping

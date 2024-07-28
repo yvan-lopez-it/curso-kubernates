@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto;
+package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.out.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

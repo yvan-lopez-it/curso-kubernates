@@ -1,7 +1,7 @@
 package com.yvancho.springcloud.msvc.usuarios.application.service;
 
-import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.client.CursoClienteRest;
-import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.in.client.CursoClienteRest;
+import com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.out.dto.UsuarioDTO;
 import com.yvancho.springcloud.msvc.usuarios.application.mapper.UsuarioDTOMapper;
 import com.yvancho.springcloud.msvc.usuarios.application.port.in.UsuarioUseCase;
 import com.yvancho.springcloud.msvc.usuarios.application.port.out.UsuarioPort;

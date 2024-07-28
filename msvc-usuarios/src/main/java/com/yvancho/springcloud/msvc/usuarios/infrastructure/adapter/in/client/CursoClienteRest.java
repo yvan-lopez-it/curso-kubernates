@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.client;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.in.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -35,8 +35,8 @@ ENV PORT $PORT_APP
 ENV SPRING_PROFILES_ACTIVE=docker
 EXPOSE $PORT
 
-#CMD ["java", "-jar", "msvc-cursos-0.0.1-SNAPSHOT.jar"]
-CMD sleep 20 && java -jar msvc-cursos-0.0.1-SNAPSHOT.jar
+CMD ["java", "-jar", "msvc-cursos-0.0.1-SNAPSHOT.jar"]
+#CMD sleep 20 && java -jar msvc-cursos-0.0.1-SNAPSHOT.jar
 
 #ENTRYPOINT ["java", "-jar", "msvc-cursos-0.0.1-SNAPSHOT.jar"]
 
@@ -46,5 +46,6 @@ CMD sleep 20 && java -jar msvc-cursos-0.0.1-SNAPSHOT.jar
 
 # docker run -p 8002:8002 -d --rm --name msvc-cursos --network spring cursos
 
-# docker tag cursos yvancho/cursos
-# docker push yvancho/cursos
+# docker build -t cursos . -f .\msvc-cursos\Dockerfile
+# docker tag cursos yvancho/cursos:latest
+# docker push yvancho/cursos:latest

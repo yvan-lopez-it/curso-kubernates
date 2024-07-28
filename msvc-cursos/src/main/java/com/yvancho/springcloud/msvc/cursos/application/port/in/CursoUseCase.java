@@ -1,7 +1,7 @@
 package com.yvancho.springcloud.msvc.cursos.application.port.in;
 
-import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoDTO;
-import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.out.dto.CursoDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.out.dto.UsuarioDTO;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,9 +1,9 @@
-package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.controller;
+package com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.in.web.controller;
 
 import com.yvancho.springcloud.msvc.cursos.application.port.in.CursoUseCase;
-import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.CursoDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.out.dto.CursoDTO;
 
-import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.dto.UsuarioDTO;
+import com.yvancho.springcloud.msvc.cursos.infrastructure.adapters.out.dto.UsuarioDTO;
 import feign.FeignException.FeignClientException;
 import jakarta.validation.Valid;
 import java.util.Collections;

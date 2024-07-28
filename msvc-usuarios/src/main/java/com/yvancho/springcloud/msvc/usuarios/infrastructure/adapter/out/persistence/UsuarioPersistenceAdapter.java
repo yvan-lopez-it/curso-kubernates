@@ -1,4 +1,4 @@
-package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.persistence;
+package com.yvancho.springcloud.msvc.usuarios.infrastructure.adapter.out.persistence;
 
 import com.yvancho.springcloud.msvc.usuarios.application.port.out.UsuarioPort;
 import com.yvancho.springcloud.msvc.usuarios.domain.model.Usuario;
