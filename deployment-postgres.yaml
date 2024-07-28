@@ -31,6 +31,8 @@ spec:
               name: postgres-data
       volumes:
         - name: postgres-data
-          hostPath:
-            path: /var/lib/postgresql/data
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+#          hostPath:
+#            path: /var/lib/postgresql/data
+#            type: DirectoryOrCreate
