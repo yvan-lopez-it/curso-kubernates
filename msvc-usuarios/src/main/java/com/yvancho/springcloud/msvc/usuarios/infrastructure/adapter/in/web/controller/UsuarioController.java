@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,9 @@ public class UsuarioController {
 
     private final ApplicationContext context;
 
+    @Autowired
+    private Environment env;
+
     public UsuarioController(UsuarioUseCase useCase, ApplicationContext context) {
         this.useCase = useCase;
         this.context = context;
@@ -41,8 +46,12 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> listar() {
-        return ResponseEntity.ok(useCase.listar());
+    public ResponseEntity<?> listar() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("users", useCase.listar());
+        body.put("podInfo", env.getProperty("MY_POD_NAME") + ": " + env.getProperty("MY_POD_IP"));
+        body.put("texto", env.getProperty("config.texto"));
+        return ResponseEntity.ok(body);
     }
 
     @GetMapping("/{id}")

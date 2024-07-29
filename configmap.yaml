@@ -6,11 +6,23 @@ data:
   port: "8001"
   db_host: "mysql-db:3306"
   db_database: "msvc_usuarios"
-#  db_username: "mysql"
-#  db_password: "mysql"
-#  db_root_password: "root"
-  cursos_url: "msvc-cursos:8002"
-
+  application.yaml: |-
+    config:
+      texto: Configurando ambiente por defecto
+    ---
+    spring:
+      config:
+        activate:
+          on-profile: dev
+    config:
+      texto: Configurando ambiente de desarrollo
+    ---
+    spring:
+      config:
+        activate:
+          on-profile: prod
+    config:
+      texto: Configurando ambiente de produccion
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -20,6 +32,4 @@ data:
   port: "8002"
   db_host: "postgres-db:5432"
   db_database: "msvc_cursos"
-#  db_username: "postgres"
-#  db_password: "postgres"
-  usuarios_url: "msvc-usuarios:8001"
+

@@ -12,7 +12,7 @@ spec:
       labels:
         app: msvc-cursos
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       containers:
         - image: yvancho/cursos:latest
           name: cursos
@@ -43,9 +43,4 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: password
-                  name: msvc-cursos
-            - name: USUARIOS_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: usuarios_url
                   name: msvc-cursos

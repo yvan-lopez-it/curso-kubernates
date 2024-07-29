@@ -32,19 +32,17 @@ COPY --from=builder $TARGET_FOLDER/msvc-usuarios-0.0.1-SNAPSHOT.jar .
 
 ARG PORT_APP=8001
 ENV PORT $PORT_APP
-ENV SPRING_PROFILES_ACTIVE=docker
 EXPOSE $PORT
 
 CMD ["java", "-jar", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
-#CMD sleep 20 && java -jar msvc-usuarios-0.0.1-SNAPSHOT.jar
-
-#ENTRYPOINT ["java", "-jar", "msvc-usuarios-0.0.1-SNAPSHOT.jar"]
 
 # docker build -t usuarios . -f .\msvc-usuarios\Dockerfile
+
 # docker run -d --name msvc-usuarios --network curso-kubernates_default -p 8001:8001 msvc-usuarios:latest
 # docker run -p 8001:8000 --rm -d msvc-usuarios
 
 # docker run -p 8001:8000 -d --rm --name msvc-usuarios --network spring usuarios
 
-# docker tag usuarios yvancho/usuarios
-# docker push yvancho/usuarios
+# docker build -t usuarios . -f .\msvc-usuarios\Dockerfile
+# docker tag usuarios yvancho/usuarios:latest
+# docker push yvancho/usuarios:latest

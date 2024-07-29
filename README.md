@@ -23,9 +23,11 @@
 
 - `kubectl expose deployment msvc-usuarios --port=8001 --type=LoadBalancer`
 - kubectl describe pod msvc-usuarios-546875779c-q52xg
-- minikube service msvc-usuarios --url
+- `minikube service msvc-usuarios --url`
 - kubectl set image deployment msvc-usuarios usuarios=yvancho/usuarios:v3
 - kubectl scale deployment msvc-usuarios --replicas=3
 
 - `kubectl apply -f .\deployment-usuarios.yaml -f .\svc-usuarios.yaml`
 - `kubectl apply -f .\deployment-cursos.yaml -f .\svc-cursos.yaml`
+
+- `kubectl create clusterrolebinding admin --clusterrole=cluster-admin --serviceaccount=default:default`

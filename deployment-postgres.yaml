@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    role: postgres-db
   name: postgres-db
 
 spec:
@@ -13,13 +15,20 @@ spec:
       labels:
         role: postgres-db
     spec:
-      automountServiceAccountToken: false
+      #      automountServiceAccountToken: false
       containers:
         - image: postgres:latest
           name: postgres
           ports:
             - containerPort: 5432
           env:
+            #            - name: POSTGRES_DB
+            #              value: msvc_cursos
+            #            - name: POSTGRES_USER
+            #              value: postgres
+            #            - name: POSTGRES_PASSWORD
+            #              value: postgres
+
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
@@ -36,7 +45,7 @@ spec:
                   key: password
                   name: msvc-cursos
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
+            - mountPath: /var/lib/postgres/data
               name: postgres-data
       volumes:
         - name: postgres-data
